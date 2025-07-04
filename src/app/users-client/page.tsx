@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 
 type User = {
     id: number;
@@ -21,8 +21,12 @@ const [error, setError] = useState("");
                 if (!res.ok) throw new Error("Failed to fetch users");
                 const data = await res.json();
                 setUsers(data);
-            } catch (error: any) {
-                setError(error.message);
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError(String(error));
+                }
             } finally {
                 setLoading(false);
             }
